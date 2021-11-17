@@ -1,32 +1,59 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <Header />
+    <div class="main_body">  
+      <SideBar />
+      <div class="main_content">
+        <router-view/>
+      </div>
     </div>
-    <router-view/>
   </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<script>
+import Header from '@/components/Header.vue'
+import SideBar from '@/components/SideBar.vue'
+
+export default {
+  components: {
+    Header,
+    SideBar,
+  },
+
+  async mounted() {
+    await this.$store.dispatch('GET_PLAYER_INFO')
+  },
+}
+</script>
+
+<style scoped lang="scss">
+
+.main {
+  &_body {
+    padding-top: 60px;
+    display: flex;
+    justify-content: space-between;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  &_content {
+    padding: 24px 0;
+    margin-right: 24px;
+    width: 692px;
+    max-width: 692px;
+  }
 }
 
-#nav {
-  padding: 30px;
+@media (max-width: 700px){
+  .main {
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
+    &_content {
+      margin-right: 10px;
+      margin-left: 10px;
+      max-width: 500px;
     }
   }
 }
+
 </style>
