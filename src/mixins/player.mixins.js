@@ -2,6 +2,7 @@ const playerMixins = {
   data() {
     return {
       isPlay: false,
+      isPause: false,
       loading: true,
     }
   },
@@ -15,7 +16,6 @@ const playerMixins = {
     },
     mutedToggle() {// переключает режим "MUTE" (без звука)
       this.checkParams()
-
       if (this.muted) {
         this.$refs.video.muted = false
         this.muted = false
@@ -24,18 +24,26 @@ const playerMixins = {
         this.$refs.video.muted = true
         this.muted = true
         this.$store.dispatch('SET_MUTED', true)
-
       }
     },
     playerPlay() { // запускай проигрывание
       this.checkParams()
       this.$refs.video.play()
       this.isPlay = true
+      this.isPause = false
     },
     playerPause() { // ставит проигрыватель на паузу
       this.checkParams()
       this.$refs.video.pause()
       this.isPlay = false
+      this.isPause = true
+    },
+    playerStop() { // ставит проигрыватель на паузу и обнуляет счетчик времени плеера
+      this.checkParams()
+      this.$refs.video.pause()
+      this.$refs.video.currentTime = 0
+      this.isPlay = false
+      this.isPause = false
     },
     setVolume() { // устанавливает уровень громкости
       const volumeValue = this.volume
@@ -51,9 +59,7 @@ const playerMixins = {
     hideLoader() {// прячет анимацию загрузки, после загрузки видео
       this.loading = false
     },
-
   },
-
 };
 
 export default playerMixins;

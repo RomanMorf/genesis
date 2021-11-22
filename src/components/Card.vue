@@ -1,9 +1,7 @@
 <template>
   <div 
     class="card"  
-    @mouseenter="playerPlay" 
-    @mouseleave="playerPause"
-    :id="item.id"
+    :id="'card-' + item.id"
   >
     <a class="card_link" @click="$router.push('/profile/' + item.authorMeta.name )">
       <img class="card_avatar" :src="item.authorMeta.avatar" alt="user avatar">
@@ -102,6 +100,32 @@ export default {
       htmlElem: null,
     }
   },
+  methods: {
+    startStopPlay() {
+      let startStopLine = (window.innerHeight * 0.25) + window.scrollY;
+      if (startStopLine < this.htmlElem.offsetTop && startStopLine < this.htmlElem.offsetTop + this.htmlElem.offsetHeight) {
+        if (!this.isPlay) {
+          return
+        } else {
+          this.playerStop()
+        }
+      } else if (startStopLine > this.htmlElem.offsetTop && startStopLine > this.htmlElem.offsetTop + this.htmlElem.offsetHeight) {
+        if (!this.isPlay) {
+          return
+        } else {
+          this.playerStop()
+        }
+      } else if (startStopLine > this.htmlElem.offsetTop && startStopLine < this.htmlElem.offsetTop + this.htmlElem.offsetHeight) {
+        if (this.isPlay ) {
+          return
+        } else if (this.isPause) {
+          return
+        } else {
+          this.playerPlay()
+        }
+      }
+    }
+  },
   mixins: [playerMixins],
   computed: {
     cardText() { // текст без хештегов
@@ -113,6 +137,11 @@ export default {
 
   mounted() {
     this.checkParams()
+    this.htmlElem = document.querySelector(`#card-${this.item.id}`)
+
+    document.addEventListener('scroll', ()=> {
+      this.startStopPlay()
+    })
   },
 }
 </script>
